@@ -133,6 +133,20 @@ function renderCloset() {
     const sampleBtn = document.getElementById('btnClearSamples');
     grid.innerHTML = '';
 
+    // Update filter counts
+    const counts = {
+        all: allClothes.length,
+        '상의': allClothes.filter(c => c.category === '상의').length,
+        '하의': allClothes.filter(c => c.category === '하의').length,
+        '아우터': allClothes.filter(c => c.category === '아우터').length,
+        '신발': allClothes.filter(c => c.category === '신발').length,
+    };
+    document.querySelectorAll('#closetFilter .filter-chip').forEach(chip => {
+        const cat = chip.dataset.category;
+        const name = cat === 'all' ? '전체' : cat;
+        chip.textContent = `${name} ${counts[cat] || 0}`;
+    });
+
     let filtered = allClothes;
     if (currentFilter !== 'all') {
         filtered = allClothes.filter(c => c.category === currentFilter);
@@ -590,6 +604,20 @@ function renderSavedCoords() {
     const empty = document.getElementById('savedEmpty');
     grid.innerHTML = '';
 
+    // Update saved filter counts
+    const tagCounts = {
+        all: allCoords.length,
+        '등교룩': allCoords.filter(c => c.tag === '등교룩').length,
+        '데이트룩': allCoords.filter(c => c.tag === '데이트룩').length,
+        '여행룩': allCoords.filter(c => c.tag === '여행룩').length,
+        '데일리룩': allCoords.filter(c => c.tag === '데일리룩').length,
+    };
+    document.querySelectorAll('#savedFilter .filter-chip').forEach(chip => {
+        const tag = chip.dataset.tag;
+        const name = tag === 'all' ? '전체' : tag;
+        chip.textContent = `${name} ${tagCounts[tag] || 0}`;
+    });
+
     let filtered = allCoords;
     if (currentSavedFilter !== 'all') {
         filtered = allCoords.filter(co => co.tag === currentSavedFilter);
@@ -791,8 +819,162 @@ async function checkOnboarding() {
     });
 }
 
-// ─── Sample Clothes (SVG-based placeholders) ───────────────
+// ─── Sample Clothes (SVG-based Fashion Illustrations) ───────
+const SAMPLE_ILLUSTRATIONS = {
+    '흰색 셔츠': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+        <rect width="240" height="240" fill="#FBF9F5" rx="16"/>
+        <g transform="translate(20, 15)">
+            <path d="M40 50 L100 35 L160 50 L185 95 L155 105 L150 185 L50 185 L45 105 L15 95 Z" fill="#000000" opacity="0.04"/>
+            <path d="M40 45 L100 32 L160 45 L180 90 L152 100 L148 180 L52 180 L48 100 L20 90 Z" fill="#FFFFFF" stroke="#D3CDC2" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M52 80 L48 100" stroke="#E2DCD2" stroke-width="2"/>
+            <path d="M148 80 L152 100" stroke="#E2DCD2" stroke-width="2"/>
+            <line x1="100" y1="45" x2="100" y2="180" stroke="#E2DCD2" stroke-width="2.5"/>
+            <circle cx="100" cy="70" r="2.5" fill="#B5ADA0"/>
+            <circle cx="100" cy="100" r="2.5" fill="#B5ADA0"/>
+            <circle cx="100" cy="130" r="2.5" fill="#B5ADA0"/>
+            <circle cx="100" cy="160" r="2.5" fill="#B5ADA0"/>
+            <rect x="65" y="80" width="22" height="26" rx="2" fill="#FAFAFA" stroke="#DCD6CA" stroke-width="1.8"/>
+            <path d="M82 32 L100 55 L75 48 Z" fill="#F7F5F0" stroke="#C4BEB3" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M118 32 L100 55 L125 48 Z" fill="#F7F5F0" stroke="#C4BEB3" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M52 180 Q100 190 148 180" fill="none" stroke="#D3CDC2" stroke-width="2"/>
+        </g>
+    </svg>`,
+
+    '스트라이프 티': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+        <rect width="240" height="240" fill="#F7F8FA" rx="16"/>
+        <g transform="translate(20, 20)">
+            <defs>
+                <clipPath id="teeClip">
+                    <path d="M50 35 Q100 48 150 35 L180 75 L155 88 L146 175 L54 175 L45 88 L20 75 Z"/>
+                </clipPath>
+            </defs>
+            <path d="M50 35 Q100 48 150 35 L180 75 L155 88 L146 175 L54 175 L45 88 L20 75 Z" fill="#FDFDFD" stroke="#CCD2D9" stroke-width="2.5" stroke-linejoin="round"/>
+            <g clip-path="url(#teeClip)">
+                <rect x="0" y="55" width="200" height="6" fill="#2E4A62"/>
+                <rect x="0" y="70" width="200" height="6" fill="#2E4A62"/>
+                <rect x="0" y="85" width="200" height="6" fill="#2E4A62"/>
+                <rect x="0" y="100" width="200" height="6" fill="#2E4A62"/>
+                <rect x="0" y="115" width="200" height="6" fill="#2E4A62"/>
+                <rect x="0" y="130" width="200" height="6" fill="#2E4A62"/>
+                <rect x="0" y="145" width="200" height="6" fill="#2E4A62"/>
+                <rect x="0" y="160" width="200" height="6" fill="#2E4A62"/>
+            </g>
+            <path d="M50 35 Q100 48 150 35" fill="none" stroke="#2E4A62" stroke-width="4" stroke-linecap="round"/>
+            <path d="M50 35 Q100 48 150 35 L180 75 L155 88 L146 175 L54 175 L45 88 L20 75 Z" fill="none" stroke="#BDC4CD" stroke-width="2.5" stroke-linejoin="round"/>
+        </g>
+    </svg>`,
+
+    '니트 조끼': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+        <rect width="240" height="240" fill="#FAF6F0" rx="16"/>
+        <g transform="translate(25, 20)">
+            <path d="M45 35 L70 35 L95 80 L120 35 L145 35 L150 85 L142 170 L48 170 L40 85 Z" fill="#D9C7B2" stroke="#B8A48D" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M65 85 L65 160 M75 85 L75 160 M115 85 L115 160 M125 85 L125 160" stroke="#C4B19B" stroke-width="2" stroke-dasharray="4,3"/>
+            <path d="M70 35 L95 80 L120 35" fill="none" stroke="#A89279" stroke-width="5" stroke-linejoin="round"/>
+            <rect x="47" y="160" width="96" height="12" fill="#CCB9A3" stroke="#B8A48D" stroke-width="1.5" rx="2"/>
+            <path d="M45 35 Q36 60 40 85" fill="none" stroke="#A89279" stroke-width="4"/>
+            <path d="M145 35 Q154 60 150 85" fill="none" stroke="#A89279" stroke-width="4"/>
+        </g>
+    </svg>`,
+
+    '청바지': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+        <rect width="240" height="240" fill="#F4F7FB" rx="16"/>
+        <g transform="translate(35, 15)">
+            <path d="M30 30 L140 30 L135 70 L148 185 L105 185 L85 85 L65 185 L22 185 L35 70 Z" fill="#4B779E" stroke="#375A7A" stroke-width="2.5" stroke-linejoin="round"/>
+            <rect x="29" y="30" width="112" height="14" fill="#3D6487" stroke="#375A7A" stroke-width="2" rx="2"/>
+            <circle cx="85" cy="37" r="3.5" fill="#D6A654" stroke="#875E1E" stroke-width="1"/>
+            <path d="M85 44 L85 68 Q80 72 75 72" fill="none" stroke="#D6A654" stroke-width="2" stroke-dasharray="3,2"/>
+            <path d="M40 44 Q55 45 58 60" fill="none" stroke="#D6A654" stroke-width="2"/>
+            <path d="M130 44 Q115 45 112 60" fill="none" stroke="#D6A654" stroke-width="2"/>
+            <ellipse cx="58" cy="120" rx="9" ry="28" fill="#6B97BE" opacity="0.4"/>
+            <ellipse cx="112" cy="120" rx="9" ry="28" fill="#6B97BE" opacity="0.4"/>
+            <rect x="22" y="176" width="43" height="9" fill="#3D6487" stroke="#375A7A" stroke-width="1.5" rx="1"/>
+            <rect x="105" y="176" width="43" height="9" fill="#3D6487" stroke="#375A7A" stroke-width="1.5" rx="1"/>
+        </g>
+    </svg>`,
+
+    '베이지 슬랙스': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+        <rect width="240" height="240" fill="#FAF8F5" rx="16"/>
+        <g transform="translate(35, 15)">
+            <path d="M32 30 L138 30 L134 75 L144 190 L102 190 L85 85 L68 190 L26 190 L36 75 Z" fill="#DDD1BE" stroke="#B8A892" stroke-width="2.5" stroke-linejoin="round"/>
+            <rect x="31" y="30" width="108" height="15" fill="#CEBEA6" stroke="#B8A892" stroke-width="2" rx="2"/>
+            <rect x="76" y="33" width="18" height="9" fill="#BFAEA0" rx="2"/>
+            <line x1="58" y1="45" x2="52" y2="185" stroke="#BFB09C" stroke-width="2"/>
+            <line x1="112" y1="45" x2="118" y2="185" stroke="#BFB09C" stroke-width="2"/>
+            <line x1="34" y1="45" x2="48" y2="65" stroke="#B8A892" stroke-width="2"/>
+            <line x1="136" y1="45" x2="122" y2="65" stroke="#B8A892" stroke-width="2"/>
+        </g>
+    </svg>`,
+
+    '검정 치마': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+        <rect width="240" height="240" fill="#F8F8F8" rx="16"/>
+        <g transform="translate(30, 25)">
+            <path d="M50 35 L130 35 L165 160 Q90 170 15 160 Z" fill="#2E2E2E" stroke="#1A1A1A" stroke-width="2.5" stroke-linejoin="round"/>
+            <rect x="49" y="35" width="82" height="14" fill="#202020" stroke="#1A1A1A" stroke-width="2" rx="2"/>
+            <path d="M70 49 Q65 105 50 160" stroke="#484848" stroke-width="2.5"/>
+            <path d="M90 49 L90 165" stroke="#484848" stroke-width="2.5"/>
+            <path d="M110 49 Q115 105 130 160" stroke="#484848" stroke-width="2.5"/>
+        </g>
+    </svg>`,
+
+    '가디건': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+        <rect width="240" height="240" fill="#F4F8F5" rx="16"/>
+        <g transform="translate(18, 20)">
+            <path d="M45 40 L85 30 L120 30 L160 40 L190 95 L162 105 L155 175 L50 175 L42 105 L15 95 Z" fill="#6B9075" stroke="#4E7057" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M85 30 L102 90 L120 30" fill="#FAF6EE" stroke="#4E7057" stroke-width="2"/>
+            <rect x="97" y="90" width="11" height="85" fill="#587A61"/>
+            <circle cx="102.5" cy="105" r="3" fill="#D6B87A"/>
+            <circle cx="102.5" cy="125" r="3" fill="#D6B87A"/>
+            <circle cx="102.5" cy="145" r="3" fill="#D6B87A"/>
+            <circle cx="102.5" cy="165" r="3" fill="#D6B87A"/>
+            <rect x="58" y="130" width="24" height="28" rx="3" fill="#5E8268" stroke="#4E7057" stroke-width="2"/>
+            <rect x="123" y="130" width="24" height="28" rx="3" fill="#5E8268" stroke="#4E7057" stroke-width="2"/>
+        </g>
+    </svg>`,
+
+    '트렌치코트': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+        <rect width="240" height="240" fill="#FBF9F4" rx="16"/>
+        <g transform="translate(15, 10)">
+            <path d="M45 40 L80 25 L130 25 L165 40 L195 105 L168 115 L160 205 L50 205 L42 115 L15 105 Z" fill="#CBB597" stroke="#A69073" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M80 25 L105 75 L70 65 Z" fill="#BFA685" stroke="#9A8264" stroke-width="2"/>
+            <path d="M130 25 L105 75 L140 65 Z" fill="#BFA685" stroke="#9A8264" stroke-width="2"/>
+            <circle cx="92" cy="95" r="3.5" fill="#4A3B2C"/>
+            <circle cx="118" cy="95" r="3.5" fill="#4A3B2C"/>
+            <circle cx="92" cy="155" r="3.5" fill="#4A3B2C"/>
+            <circle cx="118" cy="155" r="3.5" fill="#4A3B2C"/>
+            <rect x="48" y="118" width="114" height="14" fill="#B3997A" stroke="#9A8264" stroke-width="2" rx="2"/>
+            <rect x="94" y="114" width="22" height="22" fill="none" stroke="#5E4733" stroke-width="3" rx="3"/>
+            <path d="M45 40 L65 30" stroke="#9A8264" stroke-width="4" stroke-linecap="round"/>
+            <path d="M165 40 L145 30" stroke="#9A8264" stroke-width="4" stroke-linecap="round"/>
+        </g>
+    </svg>`,
+
+    '흰 운동화': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+        <rect width="240" height="240" fill="#F6F8F6" rx="16"/>
+        <g transform="translate(25, 45)">
+            <path d="M25 80 C20 85 20 100 30 115 L180 115 C185 100 175 75 140 70 L110 50 C95 42 70 50 65 65 L40 75 Z" fill="#FFFFFF" stroke="#CCD4CC" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M25 115 L185 115 C188 123 180 132 170 132 L35 132 C23 132 20 123 25 115 Z" fill="#E8ECE8" stroke="#BAC4BA" stroke-width="2"/>
+            <line x1="30" y1="123" x2="180" y2="123" stroke="#D2DAD2" stroke-width="2"/>
+            <path d="M75 55 L85 75 M90 58 L100 78 M105 62 L115 82" stroke="#688F72" stroke-width="3" stroke-linecap="round"/>
+            <path d="M30 80 Q45 80 50 90" fill="none" stroke="#5E8E6E" stroke-width="4" stroke-linecap="round"/>
+        </g>
+    </svg>`,
+
+    '로퍼': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+        <rect width="240" height="240" fill="#FAF7F5" rx="16"/>
+        <g transform="translate(25, 50)">
+            <path d="M25 75 C20 80 20 95 30 105 L180 105 C185 95 178 75 145 70 L115 60 C90 58 65 62 55 68 L35 72 Z" fill="#452F24" stroke="#2D1C14" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M25 105 L180 105 L180 118 L140 118 L140 112 L45 112 L45 122 L25 122 Z" fill="#261710" stroke="#180E09" stroke-width="2" stroke-linejoin="round"/>
+            <rect x="85" y="60" width="22" height="28" rx="2" fill="#3B251B" stroke="#2D1C14" stroke-width="2" transform="rotate(-5 95 70)"/>
+            <rect x="90" y="70" width="12" height="5" rx="1.5" fill="#E2BA65"/>
+            <path d="M50 72 Q95 62 135 72" fill="none" stroke="#634537" stroke-width="2" stroke-dasharray="3,2"/>
+        </g>
+    </svg>`
+};
+
 function createSampleSVG(label, color, bgColor) {
+    if (SAMPLE_ILLUSTRATIONS[label]) {
+        return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(SAMPLE_ILLUSTRATIONS[label]);
+    }
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
         <rect width="300" height="300" fill="${bgColor}" rx="12"/>
         <text x="150" y="155" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="16" font-weight="600" fill="${color}">${label}</text>
@@ -831,6 +1013,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     await openDB();
     allClothes = await dbGetAll('clothes');
     allCoords = await dbGetAll('coords');
+
+    // Upgrade existing sample clothes with new illustrated SVGs if needed
+    for (const item of allClothes) {
+        if (item.isSample && SAMPLE_ILLUSTRATIONS[item.name]) {
+            const newImg = createSampleSVG(item.name);
+            if (item.imageData !== newImg) {
+                item.imageData = newImg;
+                await dbPut('clothes', item);
+            }
+        }
+    }
 
     setupTabs();
     setupClosetFilter();
