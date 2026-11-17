@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>입어봄 — 나만의 디지털 옷장</title>
+    <meta name="description" content="내 옷을 등록하고 코디를 조합해 저장하는 디지털 옷장 서비스">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- ===== Header ===== -->
+    <header class="site-header">
+        <h1 class="logo">입어봄</h1>
+        <nav class="main-nav" id="mainNav">
+            <button class="nav-btn active" data-tab="closet">내 옷장</button>
+            <button class="nav-btn" data-tab="coordinate">코디 만들기</button>
+            <button class="nav-btn" data-tab="saved">저장한 코디</button>
+        </nav>
+    </header>
+
+    <!-- ===== Tab: 내 옷장 ===== -->
+    <main>
+        <section class="tab-panel active" id="tab-closet">
+            <div class="panel-header">
+                <h2 class="section-title">내 옷장</h2>
+                <div class="panel-actions">
+                    <button class="btn btn-primary" id="btnAddClothes">+ 옷 등록</button>
+                    <button class="btn btn-text" id="btnClearSamples" style="display:none;">샘플 옷 삭제</button>
+                </div>
+            </div>
+            <div class="filter-bar" id="closetFilter">
+                <button class="filter-chip active" data-category="all">전체</button>
+                <button class="filter-chip" data-category="상의">상의</button>
+                <button class="filter-chip" data-category="하의">하의</button>
+                <button class="filter-chip" data-category="아우터">아우터</button>
+                <button class="filter-chip" data-category="신발">신발</button>
+            </div>
+            <div class="clothes-grid" id="clothesGrid">
+                <!-- 옷 카드가 여기에 표시됩니다 -->
+            </div>
+            <p class="empty-msg" id="closetEmpty" style="display:none;">등록된 옷이 없습니다. 옷을 등록해 보세요!</p>
+        </section>
+
+        <!-- ===== Tab: 코디 만들기 ===== -->
+        <section class="tab-panel" id="tab-coordinate">
+            <div class="panel-header">
+                <h2 class="section-title">코디 만들기</h2>
+                <div class="panel-actions">
+                    <button class="btn btn-secondary" id="btnRandomCoord">랜덤 코디</button>
+                    <button class="btn btn-primary" id="btnSaveCoord">코디 저장</button>
+                </div>
+            </div>
+            <div class="coord-builder">
+                <!-- 아우터 (옆) -->
+                <div class="coord-slot coord-outer" id="slotOuter">
+                    <span class="slot-label">아우터</span>
+                    <div class="slot-display">
+                        <button class="arrow-btn arrow-left" data-dir="prev" data-cat="아우터">‹</button>
+                        <div class="slot-img-wrap" data-cat="아우터">
+                            <p class="slot-placeholder">선택 안 함</p>
+                        </div>
+                        <button class="arrow-btn arrow-right" data-dir="next" data-cat="아우터">›</button>
+                    </div>
+                </div>
+                <!-- 메인 세로 (상의 → 하의 → 신발) -->
+                <div class="coord-main-col">
+                    <div class="coord-slot" id="slotTop">
+                        <span class="slot-label">상의</span>
+                        <div class="slot-display">
+                            <button class="arrow-btn arrow-left" data-dir="prev" data-cat="상의">‹</button>
+                            <div class="slot-img-wrap" data-cat="상의">
+                                <p class="slot-placeholder">옷을 등록해 주세요</p>
+                            </div>
+                            <button class="arrow-btn arrow-right" data-dir="next" data-cat="상의">›</button>
+                        </div>
+                    </div>
+                    <div class="coord-slot" id="slotBottom">
+                        <span class="slot-label">하의</span>
+                        <div class="slot-display">
+                            <button class="arrow-btn arrow-left" data-dir="prev" data-cat="하의">‹</button>
+                            <div class="slot-img-wrap" data-cat="하의">
+                                <p class="slot-placeholder">옷을 등록해 주세요</p>
+                            </div>
+                            <button class="arrow-btn arrow-right" data-dir="next" data-cat="하의">›</button>
+                        </div>
+                    </div>
+                    <div class="coord-slot" id="slotShoes">
+                        <span class="slot-label">신발</span>
+                        <div class="slot-display">
+                            <button class="arrow-btn arrow-left" data-dir="prev" data-cat="신발">‹</button>
+                            <div class="slot-img-wrap" data-cat="신발">
+                                <p class="slot-placeholder">선택 안 함</p>
+                            </div>
+                            <button class="arrow-btn arrow-right" data-dir="next" data-cat="신발">›</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Tab: 저장한 코디 ===== -->
+        <section class="tab-panel" id="tab-saved">
+            <div class="panel-header">
+                <h2 class="section-title">저장한 코디</h2>
+            </div>
+            <div class="filter-bar" id="savedFilter">
+                <button class="filter-chip active" data-tag="all">전체</button>
+                <button class="filter-chip" data-tag="등교룩">등교룩</button>
+                <button class="filter-chip" data-tag="데이트룩">데이트룩</button>
+                <button class="filter-chip" data-tag="여행룩">여행룩</button>
+                <button class="filter-chip" data-tag="데일리룩">데일리룩</button>
+            </div>
+            <div class="saved-grid" id="savedGrid">
+                <!-- 저장된 코디 카드 -->
+            </div>
+            <p class="empty-msg" id="savedEmpty" style="display:none;">저장한 코디가 없습니다. 코디를 만들어 보세요!</p>
+        </section>
+    </main>
+
+    <!-- ===== 옷 등록 모달 ===== -->
+    <div class="modal-overlay" id="modalAddClothes">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>옷 등록</h3>
+                <button class="modal-close" id="modalAddClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+                    <div class="upload-placeholder" id="uploadPlaceholder">
+                        <span class="upload-icon">+</span>
+                        <p>사진을 선택하세요</p>
+                        <p class="upload-hint">JPG, PNG, WebP · 최대 5MB</p>
+                        <p class="upload-hint">배경이 제거된 사진을 사용하면 더 깔끔합니다</p>
+                    </div>
+                    <img id="previewImg" class="preview-img" style="display:none;" alt="미리보기">
+                </div>
+                <div class="form-group">
+                    <label for="clothesName">옷 이름</label>
+                    <input type="text" id="clothesName" placeholder="예: 흰색 니트" maxlength="30">
+                </div>
+                <div class="form-group">
+                    <label>카테고리</label>
+                    <div class="category-select" id="categorySelect">
+                        <button class="cat-btn" data-cat="상의">상의</button>
+                        <button class="cat-btn" data-cat="하의">하의</button>
+                        <button class="cat-btn" data-cat="아우터">아우터</button>
+                        <button class="cat-btn" data-cat="신발">신발</button>
+                    </div>
+                </div>
+                <p class="form-error" id="formError" style="display:none;"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modalAddCancel">취소</button>
+                <button class="btn btn-primary" id="modalAddSave">등록</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 옷 수정 모달 ===== -->
+    <div class="modal-overlay" id="modalEditClothes">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>옷 정보 수정</h3>
+                <button class="modal-close" id="modalEditClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area">
+                    <img id="editPreviewImg" class="preview-img" alt="미리보기">
+                </div>
+                <div class="form-group">
+                    <label for="editClothesName">옷 이름</label>
+                    <input type="text" id="editClothesName" maxlength="30">
+                </div>
+                <div class="form-group">
+                    <label>카테고리</label>
+                    <div class="category-select" id="editCategorySelect">
+                        <button class="cat-btn" data-cat="상의">상의</button>
+                        <button class="cat-btn" data-cat="하의">하의</button>
+                        <button class="cat-btn" data-cat="아우터">아우터</button>
+                        <button class="cat-btn" data-cat="신발">신발</button>
+                    </div>
+                </div>
+                <p class="form-error" id="editFormError" style="display:none;"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="modalEditDelete">삭제</button>
+                <div style="flex:1"></div>
+                <button class="btn btn-secondary" id="modalEditCancel">취소</button>
+                <button class="btn btn-primary" id="modalEditSave">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 코디 저장 모달 ===== -->
+    <div class="modal-overlay" id="modalSaveCoord">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>코디 저장</h3>
+                <button class="modal-close" id="modalCoordClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="coordName">코디 이름</label>
+                    <input type="text" id="coordName" placeholder="예: 봄나들이 코디" maxlength="30">
+                </div>
+                <div class="form-group">
+                    <label>상황 태그</label>
+                    <div class="tag-select" id="tagSelect">
+                        <button class="tag-btn" data-tag="등교룩">등교룩</button>
+                        <button class="tag-btn" data-tag="데이트룩">데이트룩</button>
+                        <button class="tag-btn" data-tag="여행룩">여행룩</button>
+                        <button class="tag-btn" data-tag="데일리룩">데일리룩</button>
+                    </div>
+                </div>
+                <p class="form-error" id="coordFormError" style="display:none;"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modalCoordCancel">취소</button>
+                <button class="btn btn-primary" id="modalCoordSave">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 코디 상세 모달 ===== -->
+    <div class="modal-overlay" id="modalCoordDetail">
+        <div class="modal modal-wide">
+            <div class="modal-header">
+                <h3 id="detailCoordName">코디 이름</h3>
+                <button class="modal-close" id="modalDetailClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <span class="detail-tag" id="detailCoordTag"></span>
+                <div class="detail-items" id="detailItems">
+                    <!-- 코디에 포함된 옷들 -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="modalDetailDelete">삭제</button>
+                <div style="flex:1"></div>
+                <button class="btn btn-secondary" id="modalDetailEdit">수정</button>
+                <button class="btn btn-primary" id="modalDetailCloseBtn">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 온보딩 모달 ===== -->
+    <div class="modal-overlay active" id="modalOnboarding" style="display:none;">
+        <div class="modal modal-onboarding">
+            <div class="modal-header">
+                <h3>입어봄에 오신 것을 환영합니다</h3>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <p class="onboarding-desc">나만의 디지털 옷장을 만들어 보세요.<br>옷을 등록하고 코디를 조합해 저장할 수 있습니다.</p>
+                <p class="onboarding-notice">이 서비스는 브라우저에 데이터를 저장하며,<br>다른 기기와 동기화되지 않습니다.</p>
+                <div class="onboarding-actions">
+                    <button class="btn btn-secondary btn-large" id="btnOnboardingSample">샘플 옷으로 둘러보기</button>
+                    <button class="btn btn-primary btn-large" id="btnOnboardingOwn">내 옷 등록하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 확인 모달 ===== -->
+    <div class="modal-overlay" id="modalConfirm">
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <h3 id="confirmTitle">확인</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMsg"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="confirmCancel">취소</button>
+                <button class="btn btn-danger" id="confirmOk">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Footer ===== -->
+    <footer class="site-footer">
+        <p>입어봄 · 이 브라우저에 저장되며 다른 기기와 동기화되지 않습니다.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
